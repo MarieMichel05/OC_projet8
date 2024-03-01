@@ -9,8 +9,8 @@ import seaborn as sns
 import shap
 import pickle
 #import streamlit.components.v1 as components
-import bz2
-import _pickle as cPickle
+#import bz2
+#import _pickle as cPickle
 
 # init state
 if 'btn_clicked' not in st.session_state:
@@ -61,7 +61,7 @@ def credit_score_gauge(score):
     # Interpolate color based on score
     cmap = mcolors.LinearSegmentedColormap.from_list("custom", list(zip(thresholds, colors)))
     norm = mcolors.Normalize(vmin=0, vmax=1)
-    color = cmap(norm(score))
+    #color = cmap(norm(score))
 
     # Plot gauge
     fig, ax = plt.subplots(figsize=(6, 0.5))  # Reduced height to accommodate lower text
@@ -149,20 +149,24 @@ def bivariate_analysis(feature1, feature2):
     st.pyplot(fig)
 
 # Function to visualize SHAP values for the selected client
-def visualize_shap_values(shap_values, selected_client_data):
+def visualize_shap_values(selected_client_data):
     st.write("Features that contribute the most to the score globally")
     # Plot global contribution
-    fig, ax = plt.subplots()
-    plt.sca(ax)
-    shap.plots.bar(shap_values, show=False, max_display=10)
-    plt.title('Global SHAP Values Analysis')
-    st.pyplot(fig)
+    #fig, ax = plt.subplots()
+    #plt.sca(ax)
+    #shap.plots.bar(shap_values, show=False, max_display=10)
+    #plt.title('Global SHAP Values Analysis')
+    #st.pyplot(fig)
+    
+    # Chemin vers votre image localement
+    chemin_image = "utils/global_score.png"
+    # Afficher l'image
+    st.image(chemin_image, caption='', use_column_width=True)
 
     # Plot local contribution
     st.write("Features that contribute the most to the score for the selected client")
     fig, ax = plt.subplots()
     plt.sca(ax)
-
     data_shap_client = selected_client_data.drop(columns=['SK_ID_CURR'])
     scaled_data = scaler.transform(data_shap_client)
     shap_values_client = explainer(scaled_data, max_evals=1000)
@@ -182,8 +186,8 @@ parquet_file_train = 'utils/train_data.parquet'
 train = pq.read_table(parquet_file_train)
 df_train = train.to_pandas().reset_index(drop=True)
 
-shap_values = bz2.BZ2File('utils/shap_values.pbz2', 'rb')
-shap_values = cPickle.load(shap_values)
+#shap_values = bz2.BZ2File('utils/shap_values.pbz2', 'rb')
+#shap_values = cPickle.load(shap_values)
 
 with open('utils/model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
@@ -238,7 +242,7 @@ if st.sidebar.button('Predict', on_click=callback1) or st.session_state['btn_cli
 
         # Visualisation de la contribution des features
         st.subheader('Feature Contribution:')
-        visualize_shap_values(shap_values, selected_client_data)
+        visualize_shap_values(selected_client_data)
         st.text("Bar chart and force plot showing the features that contribute the most to the credit score globally and for the selected client.")
 
         # Dropdown for feature selection
@@ -323,7 +327,7 @@ if st.sidebar.button('Update and Re-predict', on_click=callback2) or st.session_
 
         # Visualisation de la contribution des features
         st.subheader('Feature Contribution:')
-        visualize_shap_values(shap_values, selected_client_data)
+        visualize_shap_values(selected_client_data)
         st.text("Bar chart and force plot showing the features that contribute the most to the credit score globally and for the selected client.")
 
         st.subheader('Client features visualization:')
