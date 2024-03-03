@@ -182,20 +182,16 @@ df = pq.read_table(parquet_file).to_pandas().reset_index(drop=True)
 parquet_file_train = 'utils/train_data.parquet'
 df_train = pq.read_table(parquet_file_train).to_pandas().reset_index(drop=True)
 
-#shap_values = bz2.BZ2File('utils/shap_values.pbz2', 'rb')
-#shap_values = cPickle.load(shap_values)
-
-with open('utils/model.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
+#with open('utils/model.pkl', 'rb') as model_file:
+#    model = pickle.load(model_file)
 
 with open('utils/scaler.pkl', 'rb') as scaler_file:
     scaler = pickle.load(scaler_file)
 
-explainer = shap.Explainer(model.predict, scaler.transform(df.drop(columns=['SK_ID_CURR'])))
+#explainer = shap.Explainer(model.predict, scaler.transform(df.drop(columns=['SK_ID_CURR'])))
 
-#with open('utils/shap_explainer.pkl', 'rb') as f:
-    # Load the data from the pickle file
-    #explainer = pickle.load(f)
+with open("utils/shap_explainer.sav", 'rb') as file:
+    explainer = shap.Explainer.load(file)
 
 # Streamlit app with sidebar
 st.sidebar.title('Credit Scoring Prediction Dashboard')
