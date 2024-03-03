@@ -177,12 +177,10 @@ def visualize_shap_values(selected_client_data):
 
 # Load sample parquet data
 parquet_file = 'utils/test_data.parquet'
-table = pq.read_table(parquet_file)
-df = table.to_pandas().reset_index(drop=True)
+df = pq.read_table(parquet_file).to_pandas().reset_index(drop=True)
 
 parquet_file_train = 'utils/train_data.parquet'
-train = pq.read_table(parquet_file_train)
-df_train = train.to_pandas().reset_index(drop=True)
+df_train = pq.read_table(parquet_file_train).to_pandas().reset_index(drop=True)
 
 #shap_values = bz2.BZ2File('utils/shap_values.pbz2', 'rb')
 #shap_values = cPickle.load(shap_values)
